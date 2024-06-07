@@ -20,21 +20,21 @@ public class ContactService {
     private ContactRepository contactRepository;
 
     
-    public ContactDto serviceCreate(ContactDto dto){
+    public ContactDto create(ContactDto dto){
         ModelMapper modelMapper = new ModelMapper();
         Contact contact = modelMapper.map(dto, Contact.class);
         contactRepository.save(contact);
         return modelMapper.map(contact, ContactDto.class);
     }
 
-    public List<ContactDto> serviceFindAll() {
+    public List<ContactDto> findAll() {
         List<Contact> contacts = contactRepository.findAll();
         return contacts.stream()
                 .map(contact -> new ContactDto(contact.getId(), contact.getName(), contact.getEmail(), contact.getPhone()))
                 .collect(Collectors.toList());
     }
 
-    public Optional<ContactDto> serviceFindById(long id){
+    public Optional<ContactDto> findById(long id){
         ModelMapper modelMapper = new ModelMapper();
         Optional<Contact> contactOptional = contactRepository.findById(id);
         if (contactOptional.isPresent()) {
@@ -45,7 +45,7 @@ public class ContactService {
         }
     }
 
-    public Optional<ContactDto> serviceUpdate(long id, ContactDto dto){
+    public Optional<ContactDto> update(long id, ContactDto dto){
         ModelMapper modelMapper = new ModelMapper();
         Optional<Contact> contactOptional = contactRepository.findById(id);
         if (contactOptional.isPresent()) {
@@ -58,7 +58,7 @@ public class ContactService {
         }
     }
 
-    public Optional<?> serviceDelete(long id){
+    public Optional<?> delete(long id){
         ModelMapper modelMapper = new ModelMapper();
         Optional<Contact> contactOptional = contactRepository.findById(id);
         if (contactOptional.isPresent()) {

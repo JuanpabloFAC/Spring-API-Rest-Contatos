@@ -26,39 +26,34 @@ public class ContactController {
     public ContactController(ContactService contactService) {
         this.contactService = contactService;
     }
-    
-    @GetMapping("/teste")
-    public String teste() {
-        return "Testando API!!";
-    }
 
-    @PostMapping("/create")
+    @PostMapping
     public ContactDto create(@RequestBody ContactDto contactDto){
-        return contactService.serviceCreate(contactDto);
+        return contactService.create(contactDto);
     }
 
-    @GetMapping("/findAll")
+    @GetMapping
     public List<ContactDto> findAll(){
-        return contactService.serviceFindAll();
+        return contactService.findAll();
     }
 
-    @GetMapping("/findById/{id}") 
+    @GetMapping("/{id}") 
     public ResponseEntity<ContactDto> findById(@PathVariable long id){
-    return contactService.serviceFindById(id)
+    return contactService.findById(id)
             .map(record -> ResponseEntity.ok().body(record))
             .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<ContactDto> update(@PathVariable long id, @RequestBody ContactDto contactDto) {
-        return contactService.serviceUpdate(id, contactDto)
+        return contactService.update(id, contactDto)
             .map(record -> ResponseEntity.ok().body(record))
             .orElse(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity <?> delete(@PathVariable long id) {
-        return contactService.serviceDelete(id)
+        return contactService.delete(id)
             .map(record -> ResponseEntity.ok().body(record))
             .orElse(ResponseEntity.notFound().build());
     }
