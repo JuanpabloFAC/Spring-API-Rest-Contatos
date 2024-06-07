@@ -1,7 +1,7 @@
 # API Rest CRUD - Contatos
 Esse CRUD tem como objetivo criar, ler, atualizar e deletar pessoas de uma agenda de contatos. 
 #### O que eu pude aprender com este projeto ?
-Essencialmente aprendi muito mais sobre as principais anotações utilizadas no spring quando estamos criando uma API Rest e como abstrair no controller as nossas entidades através de DTO's, ademais aprendi sobre a importância dos DTO's que concentra principalmente na privacidade dos nossos dados.
+Essencialmente aprendi mais sobre as principais anotações utilizadas quando estamos criando uma API Rest e como abstrair no controller as nossas entidades através de DTO's, ademais aprendi sobre a importância dos DTO's que se concentra principalmente na privacidade dos nossos dados.
 
 ## As tecnologias utilizadas para a criação desse projeto foram:
 - Java
