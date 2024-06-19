@@ -28,34 +28,34 @@ public class ContactController {
     }
 
     @PostMapping
-    public ContactDto create(@RequestBody ContactDto contactDto){
-        return contactService.create(contactDto);
+    public ResponseEntity<ContactDto> create(@RequestBody ContactDto contactDto){
+        var dto = contactService.create(contactDto);
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping
-    public List<ContactDto> findAll(){
-        return contactService.findAll();
+    public ResponseEntity<List<ContactDto>> findAll(){
+        var dtos = contactService.findAll();
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/{id}") 
-    public ResponseEntity<ContactDto> findById(@PathVariable long id){
-    return contactService.findById(id)
-            .map(record -> ResponseEntity.ok().body(record))
-            .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<ContactDto> findById(@PathVariable Long id) throws Exception{
+        var dto = contactService.findById(id);
+        return ResponseEntity.ok(dto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ContactDto> update(@PathVariable long id, @RequestBody ContactDto contactDto) {
-        return contactService.update(id, contactDto)
-            .map(record -> ResponseEntity.ok().body(record))
-            .orElse(ResponseEntity.notFound().build());
-    }
+    public ResponseEntity<ContactDto> update(@PathVariable Long id, @RequestBody ContactDto contactDto) throws Exception {
+        var dto = contactService.update(id, contactDto);
+        return ResponseEntity.ok(dto);
+            
+    } 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity <?> delete(@PathVariable long id) {
-        return contactService.delete(id)
-            .map(record -> ResponseEntity.ok().body(record))
-            .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity <?> delete(@PathVariable Long id) throws Exception {
+        var dto = contactService.delete(id);
+        return ResponseEntity.ok(dto);
     }
     
 }

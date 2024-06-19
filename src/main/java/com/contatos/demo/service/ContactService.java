@@ -1,8 +1,7 @@
 package com.contatos.demo.service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -10,64 +9,84 @@ import org.springframework.stereotype.Service;
 import com.contatos.demo.model.Contact;
 import com.contatos.demo.model.dto.ContactDto;
 import com.contatos.demo.repository.ContactRepository;
+import com.contatos.demo.service.iService.iMinhaInterface;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Service
-@AllArgsConstructor
-public class ContactService {
+@RequiredArgsConstructor
+public class ContactService implements iMinhaInterface<ContactDto, Long>{
     
-    private ContactRepository contactRepository;
+    private final ContactRepository contactRepository;
+    private final ModelMapper modelMapper; //tem a opção do new sem o configuration
 
-    
+    @Override
     public ContactDto create(ContactDto dto){
-        ModelMapper modelMapper = new ModelMapper();
+        
         Contact contact = modelMapper.map(dto, Contact.class);
         contactRepository.save(contact);
         return modelMapper.map(contact, ContactDto.class);
+
     }
 
     public List<ContactDto> findAll() {
+        
         List<Contact> contacts = contactRepository.findAll();
-        return contacts.stream()
-                .map(contact -> new ContactDto(contact.getId(), contact.getName(), contact.getEmail(), contact.getPhone()))
-                .collect(Collectors.toList());
-    }
-
-    public Optional<ContactDto> findById(long id){
-        ModelMapper modelMapper = new ModelMapper();
-        Optional<Contact> contactOptional = contactRepository.findById(id);
-        if (contactOptional.isPresent()) {
-            Contact contact = contactOptional.get();
-            return Optional.ofNullable(modelMapper.map(contact, ContactDto.class));
-        } else {
-            return Optional.empty();
+        List<ContactDto> retorno = new ArrayList<ContactDto>();
+        
+        for (Contact contact : contacts) {
+            retorno.add(modelMapper.map(contact, ContactDto.class));
         }
+
+        return retorno;
+
     }
 
-    public Optional<ContactDto> update(long id, ContactDto dto){
-        ModelMapper modelMapper = new ModelMapper();
-        Optional<Contact> contactOptional = contactRepository.findById(id);
-        if (contactOptional.isPresent()) {
-            Contact contact = contactOptional.get();
-            modelMapper.map(dto, contact);
+    public ContactDto findById(Long id) throws Exception {       
+        
+        Contact contact = contactRepository.getReferenceById(id);
+        
+        if (contact != null && contact.getId()>0) {
+            return modelMapper.map(contact, ContactDto.class);
+        } else {
+            throw new Exception("Contato não encontrado!");
+        }
+        
+    }
+
+    public ContactDto update(Long id, ContactDto dto) throws Exception {
+        
+        var contactBanco = contactRepository.getReferenceById(id);
+
+        if (contactBanco != null && contactBanco.getId() != null) {
+            
+            Contact contact = modelMapper.map(dto, Contact.class);
+            contact.setId(id);
             contactRepository.save(contact);
-            return Optional.ofNullable(modelMapper.map(contact, ContactDto.class));
+            return modelMapper.map(contact, ContactDto.class);
+
         } else {
-            return Optional.empty();
+
+            throw new Exception("Contato não encontrado!");
+
         }
+
     }
 
-    public Optional<?> delete(long id){
-        ModelMapper modelMapper = new ModelMapper();
-        Optional<Contact> contactOptional = contactRepository.findById(id);
-        if (contactOptional.isPresent()) {
-            Contact contact = contactOptional.get();
-            ContactDto contactDto = modelMapper.map(contact, ContactDto.class);
+    public ContactDto delete(Long id) throws Exception {
+
+        var contactBanco = contactRepository.getReferenceById(id);
+       
+        if (contactBanco != null && contactBanco.getId() != null) {
+
+            ContactDto contactDto = modelMapper.map(contactBanco, ContactDto.class);
             contactRepository.deleteById(id);
-            return Optional.of(contactDto);
+            return contactDto;
+            
         } else {
-            return Optional.empty();
+            
+            throw new Exception("Contato não encontrado!");
+
         }
 
     }
